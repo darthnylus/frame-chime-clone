@@ -12,6 +12,10 @@ export default {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      body: ['"Inter Tight"', 'sans-serif'],
+      display: ['"Inter Tight"', 'sans-serif'],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
