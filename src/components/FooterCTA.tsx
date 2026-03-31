@@ -1,17 +1,18 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
 
 const FooterCTA = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
+  const marqueeX = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
+  const ctaScale = useTransform(scrollYProgress, [0.3, 0.7], [0.92, 1]);
+  const ctaOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0, 1]);
+
   return (
-    <section className="px-6 md:px-12 lg:px-20 py-20 md:py-32 text-center">
-      {/* Marquee text */}
+    <section ref={ref} className="px-6 md:px-12 lg:px-20 py-20 md:py-32 text-center">
       <div className="overflow-hidden mb-16">
-        <motion.div
-          className="flex whitespace-nowrap animate-marquee"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <motion.div className="flex whitespace-nowrap" style={{ x: marqueeX }}>
           {[...Array(4)].map((_, i) => (
             <span key={i} className="font-display text-foreground/5 text-[8rem] md:text-[12rem] uppercase mx-8">
               ALKEBULAN
@@ -22,19 +23,17 @@ const FooterCTA = () => {
 
       <motion.h2
         className="font-display text-foreground text-4xl md:text-6xl lg:text-7xl uppercase max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        style={{ scale: ctaScale, opacity: ctaOpacity }}
       >
         The Mother of Mankind Does Not Apologize
       </motion.h2>
 
       <motion.p
         className="text-muted-foreground text-sm md:text-base mt-6 max-w-xl mx-auto"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, filter: "blur(6px)" }}
+        whileInView={{ opacity: 1, filter: "blur(0px)" }}
         viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.2, duration: 0.8 }}
       >
         A name is an identity. A name is a history. Share this with someone who still thinks the name Africa is just a name.
       </motion.p>
@@ -61,7 +60,6 @@ const FooterCTA = () => {
         </span>
       </motion.div>
 
-      {/* Footer bottom */}
       <div className="mt-24 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between text-muted-foreground text-xs tracking-wider">
         <span className="font-display text-foreground text-lg">ALKEBULAN</span>
         <span>Mother of Mankind · The Original Name</span>

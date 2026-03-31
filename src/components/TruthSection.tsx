@@ -11,27 +11,41 @@ const truths = [
   "None of them called their home Africa. They called it Alkebulan: Mother of Mankind",
 ];
 
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const card = {
+  hidden: { opacity: 0, y: 30, scale: 0.97 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+};
+
 const TruthSection = () => {
   return (
     <section id="truth" className="px-6 md:px-12 lg:px-20 py-20 md:py-32">
       <motion.h2
         className="font-display text-foreground text-5xl md:text-7xl lg:text-8xl uppercase"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 40, clipPath: "inset(0 0 100% 0)" }}
+        whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
         viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         The Truth You Now Carry
       </motion.h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16"
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
         {truths.map((truth, i) => (
           <motion.div
             key={i}
-            className="border border-border p-6 md:p-8 hover:border-primary/30 transition-colors group"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.06 }}
+            className="border border-border p-6 md:p-8 hover:border-primary/30 transition-all duration-300 group hover:-translate-y-1"
+            variants={card}
           >
             <span className="text-primary font-display text-lg">{String(i + 1).padStart(2, "0")}</span>
             <p className="text-foreground/80 text-sm leading-relaxed mt-3 group-hover:text-foreground transition-colors">
@@ -39,7 +53,7 @@ const TruthSection = () => {
             </p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };
