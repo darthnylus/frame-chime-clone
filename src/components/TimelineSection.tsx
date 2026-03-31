@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
 
 const timeline = [
   { org: "Nubia / Kush", role: "The Spine of the Ancient World", period: "~3500 BCE", desc: "More pyramids than Egypt. The world's first iron-smelting centre. Trade networks reaching into the Mediterranean." },
@@ -9,15 +10,25 @@ const timeline = [
 ];
 
 const TimelineSection = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const lineHeight = useTransform(scrollYProgress, [0, 0.8], ["0%", "100%"]);
+
   return (
-    <section className="px-6 md:px-12 lg:px-20 py-20 md:py-32">
-      {/* Section header */}
+    <section ref={ref} className="px-6 md:px-12 lg:px-20 py-20 md:py-32 relative">
+      {/* Animated vertical line accent */}
+      <motion.div
+        className="hidden lg:block absolute left-8 top-32 bottom-20 w-px bg-primary/30 origin-top"
+        style={{ scaleY: scrollYProgress, transformOrigin: "top" }}
+      />
+
       <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
         <motion.h2
           className="font-display text-foreground text-5xl md:text-7xl lg:text-8xl uppercase"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 40, clipPath: "inset(0 0 100% 0)" }}
+          whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
           viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           Timeline
         </motion.h2>
@@ -38,24 +49,21 @@ const TimelineSection = () => {
         </motion.a>
       </div>
 
-      {/* Timeline items — Avexis awards style */}
       <div className="space-y-0">
         {timeline.map((item, i) => (
           <motion.div
             key={item.org}
             className="border-t border-border py-8 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-4 md:gap-8 items-start"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
+            transition={{ delay: i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <div>
               <h3 className="font-display text-foreground text-xl md:text-2xl uppercase">{item.org}</h3>
               <p className="text-primary text-sm mt-1">{item.role}</p>
             </div>
-
             <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-
             <span className="text-foreground/40 text-sm tracking-wider font-display text-lg">{item.period}</span>
           </motion.div>
         ))}
