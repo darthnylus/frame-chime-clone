@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import IntroLoader from "@/components/IntroLoader";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import OriginsSection from "@/components/OriginsSection";
@@ -10,19 +13,27 @@ import ResourcesSection from "@/components/ResourcesSection";
 import FooterCTA from "@/components/FooterCTA";
 
 const Index = () => {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <HeroSection />
-      <OriginsSection />
-      <CivilizationsSection />
-      <TimelineSection />
-      <TheNameSection />
-      <ScholarSection />
-      <TruthSection />
-      <ResourcesSection />
-      <FooterCTA />
-    </div>
+    <>
+      <AnimatePresence mode="wait">
+        {loading && <IntroLoader key="loader" onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      <div className={`min-h-screen bg-background ${loading ? "overflow-hidden h-screen" : ""}`}>
+        <Navbar />
+        <HeroSection />
+        <OriginsSection />
+        <CivilizationsSection />
+        <TimelineSection />
+        <TheNameSection />
+        <ScholarSection />
+        <TruthSection />
+        <ResourcesSection />
+        <FooterCTA />
+      </div>
+    </>
   );
 };
 
